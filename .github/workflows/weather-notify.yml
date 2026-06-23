@@ -1,0 +1,57 @@
+name: Weather Notify
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode"
+        required: true
+        default: "tomorrow"
+        type: choice
+        options:
+          - tomorrow
+          - hourly
+          - test-wechat
+  schedule:
+    - cron: "0 14 * * *"
+    - cron: "0 0-13 * * *"
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Shanghai
+      QWEATHER_API_HOST: ${{ secrets.QWEATHER_API_HOST }}
+      QWEATHER_KID: ${{ secrets.QWEATHER_KID }}
+      QWEATHER_PROJECT_ID: ${{ secrets.QWEATHER_PROJECT_ID }}
+      QWEATHER_PRIVATE_KEY_PEM: ${{ secrets.QWEATHER_PRIVATE_KEY_PEM }}
+      WXPUSHER_SPT: ${{ secrets.WXPUSHER_SPT }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Decide mode
+        id: mode
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "mode=${{ github.event.inputs.mode }}" >> "$GITHUB_OUTPUT"
+          else
+            hour_utc="$(date -u +%H)"
+            if [ "$hour_utc" = "14" ]; then
+              echo "mode=tomorrow" >> "$GITHUB_OUTPUT"
+            else
+              echo "mode=hourly" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+      - name: Run notifier
+        run: python app.py ${{ steps.mode.outputs.mode }}

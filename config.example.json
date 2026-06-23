@@ -1,0 +1,36 @@
+{
+  "locations": [
+    {
+      "query": "河南省平顶山市宝丰县",
+      "location_id": "101180503",
+      "longitude": "113.06614",
+      "latitude": "33.86636"
+    },
+    {
+      "query": "成都市武侯区",
+      "location_id": "101270119",
+      "longitude": "104.04311",
+      "latitude": "30.64124"
+    }
+  ],
+  "qweather": {
+    "api_host": "",
+    "credentials": {
+      "kid": "",
+      "project_id": "",
+      "private_key_pem": ""
+    },
+    "lang": "zh",
+    "unit": "m"
+  },
+  "wxpusher": {
+    "spt": ""
+  },
+  "schedule": {
+    "nightly_time": "22:00",
+    "quiet_start_hour": 22,
+    "quiet_end_hour": 8,
+    "rain_check_interval_minutes": 60,
+    "rain_lookahead_hours": 3
+  }
+}
