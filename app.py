@@ -13,6 +13,7 @@ from weather_service import QWeatherClient, ResolvedLocation, WeatherApiError
 
 BASE_DIR = Path(__file__).resolve().parent
 CONFIG_PATH = BASE_DIR / "config.json"
+FALLBACK_CONFIG_PATH = BASE_DIR / "config.example.json"
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -21,7 +22,8 @@ def load_json(path: Path) -> dict[str, Any]:
 
 
 def load_config() -> dict[str, Any]:
-    config = load_json(CONFIG_PATH)
+    config_path = CONFIG_PATH if CONFIG_PATH.exists() else FALLBACK_CONFIG_PATH
+    config = load_json(config_path)
 
     qweather = config.setdefault("qweather", {})
     credentials = qweather.setdefault("credentials", {})
