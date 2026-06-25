@@ -45,12 +45,14 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "mode=${{ github.event.inputs.mode }}" >> "$GITHUB_OUTPUT"
           else
-            hour_utc="$(date -u +%H)"
-            if [ "$hour_utc" = "14" ]; then
-              echo "mode=tomorrow" >> "$GITHUB_OUTPUT"
-            else
-              echo "mode=hourly" >> "$GITHUB_OUTPUT"
-            fi
+            case "${{ github.event.schedule }}" in
+              "0 14 * * *")
+                echo "mode=tomorrow" >> "$GITHUB_OUTPUT"
+                ;;
+              *)
+                echo "mode=hourly" >> "$GITHUB_OUTPUT"
+                ;;
+            esac
           fi
 
       - name: Run notifier

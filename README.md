@@ -43,6 +43,8 @@ python app.py hourly
 - `14:00 UTC` = `22:00 Asia/Shanghai`，执行 `tomorrow`
 - `00:00-13:00 UTC` 每小时一次，对应中国时间 `08:00-21:00`，执行 `hourly`
 
+现在工作流会直接按触发它的 cron 来选模式，不再依赖“实际执行时的 UTC 小时”，这样 GitHub 即使延迟几分钟或一小时，也不会把 22:00 的那次错分成 `hourly`。
+
 你也可以在 GitHub Actions 页面手动运行，并选择：
 
 - `tomorrow`
